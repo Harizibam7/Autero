@@ -61,5 +61,13 @@ model AvailableTrigger{
 model ZapRun {
   id String @id @default(uuid())
   zapId String 
+  metadata  Json
   zap Zap @relation(fields: [zapId], references: [id])
+  zaprunoutbox ZapRunOutbox?
+}
+
+model ZapRunOutbox{
+  id String @id @default(uuid())
+  zapRunId String @unique
+  zapRun ZapRun @relation(fields: [zapRunId], references: [id])
 }
