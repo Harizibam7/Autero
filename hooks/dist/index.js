@@ -16,25 +16,29 @@ const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 const app = (0, express_1.default)();
 const client = new client_1.PrismaClient();
-app.post("/hooks/catch/:userId:/:zapId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params["userId:"];
+app.use(express_1.default.json());
+app.post("/hooks/catch/:userId/:zapId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params["userId"];
     const zapId = req.params.zapId;
     const body = req.body;
     //store in db a new trigger
     yield client.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
-        const run = yield client.zapRun.create({
+        const run = yield tx.zapRun.create({
             data: {
                 zapId: zapId,
                 metadata: body
             }
         });
-        yield client.zapRunOutbox.create({
+        yield tx.zapRunOutbox.create({
             data: {
                 zapRunId: run.id
             }
         });
     }));
     //push it on to a queue[kafka/redis]
+    res.json({
+        message: "webhook received"
+    });
 }));
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
