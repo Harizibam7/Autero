@@ -4,10 +4,13 @@ exports.zapRouter = void 0;
 const express_1 = require("express");
 const middleware_1 = require("../middleware");
 const router = (0, express_1.Router)();
+//@ts-ignore
 router.post('/', middleware_1.authMiddleware, (req, res) => {
 });
+//@ts-ignore
 router.get('/', middleware_1.authMiddleware, (req, res) => {
 });
+//@ts-ignore
 router.get('/:zapId', middleware_1.authMiddleware, (req, res) => {
 });
 exports.zapRouter = router;
